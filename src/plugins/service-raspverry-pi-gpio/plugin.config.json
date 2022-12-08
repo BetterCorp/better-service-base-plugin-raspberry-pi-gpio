@@ -1,0 +1,39 @@
+{
+  "key": "service-raspverry-pi-gpio",
+  "name": "Raspberry PI GPIO",
+  "icon": "raspverry-pi-gpio.png",
+  "description": "Transfer events to webhook URLs",
+  "badges": [
+    {
+      "url": "https://codecov.io/gh/BetterCorp/service-base-plugin-raspverry-pi-gpio",
+      "img": "https://codecov.io/gh/BetterCorp/service-base-plugin-raspverry-pi-gpio/branch/master/graph/badge.svg"
+    },
+    {
+      "img": "https://img.shields.io/github/license/BetterCorp/service-base-plugin-raspverry-pi-gpio"
+    },
+    {
+      "img": "https://img.shields.io/snyk/vulnerabilities/github/BetterCorp/service-base-plugin-raspverry-pi-gpio"
+    },
+    {
+      "img": "https://img.shields.io/github/issues-raw/BetterCorp/service-base-plugin-raspverry-pi-gpio"
+    },
+    {
+      "img": "https://github.com/BetterCorp/service-base-plugin-raspverry-pi-gpio/actions/workflows/develop.yml/badge.svg?branch=develop"
+    },
+    {
+      "img": "https://github.com/BetterCorp/service-base-plugin-raspverry-pi-gpio/actions/workflows/master.yml/badge.svg?branch=master"
+    },
+    {
+      "img": "https://img.shields.io/github/issues-raw/BetterCorp/service-base-plugin-raspverry-pi-gpio"
+    },
+    {
+      "img": "https://img.shields.io/npm/dt/@bettercorp/service-base-plugin-raspverry-pi-gpio"
+    },
+    {
+      "img": "https://img.shields.io/bundlephobia/min/@bettercorp/service-base-plugin-raspverry-pi-gpio"
+    },
+    {
+      "img": "https://img.shields.io/npm/v/@bettercorp/service-base-plugin-raspverry-pi-gpio"
+    }
+  ]
+}
