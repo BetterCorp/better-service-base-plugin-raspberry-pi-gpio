@@ -4,7 +4,13 @@ import {
   ServiceCallable,
   ServicesBase,
 } from "@bettercorp/service-base";
-import { MyPluginConfig, PinPullDown, PinState, PinType } from "./sec.config";
+import {
+  MyPluginConfig,
+  PinPullDown,
+  PinState,
+  PinType,
+  PluginPins,
+} from "./sec.config";
 
 export interface onEvents extends ServiceCallable {
   setOutputPin(pin: number, state: boolean): Promise<void>;
@@ -26,13 +32,18 @@ export class Service extends ServicesBase<
   ) {
     super(pluginName, cwd, pluginCwd, log);
   }
+  private knownPins: Array<PluginPins> = [];
   public override dispose(): void {
+    for (let cPin of this.knownPins) {
+      rpio.write(cPin.pin, rpio.LOW);
+    }
     rpio.exit();
   }
   public override async init(): Promise<void> {
     const self = this;
+    this.knownPins = (await self.getPluginConfig()).pins;
     rpio.init((await self.getPluginConfig()).rpioOptions);
-    for (let pin of (await this.getPluginConfig()).pins) {
+    for (let pin of self.knownPins) {
       self.log.info(
         "Setup pin: {pinNumber} {pinMode} {pinPulldown} defaults {defaultState}",
         {
@@ -57,7 +68,7 @@ export class Service extends ServicesBase<
       rpio.open(pin.pin, pinType, pinPulldownOrState);
     }
     this.onEvent("setOutputPin", async (pin, state) => {
-      for (let cPin of (await self.getPluginConfig()).pins) {
+      for (let cPin of self.knownPins) {
         if (cPin.pin === pin) {
           self.log.debug("Set Output Pin [{pin}]: {state}", { pin, state });
           rpio.write(cPin.pin, state ? rpio.HIGH : rpio.LOW);
