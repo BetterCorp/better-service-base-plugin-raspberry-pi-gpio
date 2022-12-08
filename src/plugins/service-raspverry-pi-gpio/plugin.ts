@@ -14,6 +14,7 @@ import {
 
 export interface onEvents extends ServiceCallable {
   setOutputPin(pin: number, state: boolean): Promise<void>;
+  setOutputPins(pins: Array<{ pin: number; state: boolean }>): Promise<void>;
 }
 
 export class Service extends ServicesBase<
@@ -39,12 +40,25 @@ export class Service extends ServicesBase<
     }
     rpio.exit();
   }
+  private async setPinState(pin: number, state: boolean) {
+    for (let cPin of this.knownPins) {
+      if (cPin.pin === pin) {
+        await this.log.debug("Set Output Pin [{pin}]: {state}", { pin, state });
+        rpio.write(cPin.pin, state ? rpio.HIGH : rpio.LOW);
+        return;
+      }
+    }
+    await this.log.error("Cannot set pin [{pin}] as it's not an output pin!", {
+      pin,
+    });
+    return;
+  }
   public override async init(): Promise<void> {
     const self = this;
     this.knownPins = (await self.getPluginConfig()).pins;
     rpio.init((await self.getPluginConfig()).rpioOptions);
     for (let pin of self.knownPins) {
-      self.log.info(
+      await self.log.info(
         "Setup pin: {pinNumber} {pinMode} {pinPulldown} defaults {defaultState}",
         {
           pinNumber: pin.pin,
@@ -68,17 +82,12 @@ export class Service extends ServicesBase<
       rpio.open(pin.pin, pinType, pinPulldownOrState);
     }
     this.onEvent("setOutputPin", async (pin, state) => {
-      for (let cPin of self.knownPins) {
-        if (cPin.pin === pin) {
-          self.log.debug("Set Output Pin [{pin}]: {state}", { pin, state });
-          rpio.write(cPin.pin, state ? rpio.HIGH : rpio.LOW);
-          return;
-        }
+      await self.setPinState(pin, state);
+    });
+    this.onEvent("setOutputPins", async (pins) => {
+      for (let cPin of pins) {
+        await self.setPinState(cPin.pin, cPin.state);
       }
-      self.log.error("Cannot set pin [{pin}] as it's not an output pin!", {
-        pin,
-      });
-      return;
     });
   }
   public override async run(): Promise<void> {

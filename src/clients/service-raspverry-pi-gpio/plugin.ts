@@ -22,4 +22,7 @@ export class ADBudClient extends ServicesClient<
   async setPinState(pin: number, state: boolean): Promise<void> {
     await this._plugin.emitEvent("setOutputPin", pin, state);
   }
+  async setPinsState(pins: Array<{pin: number, state: boolean}>): Promise<void> {
+    await this._plugin.emitEvent("setOutputPins", pins);
+  }
 }
