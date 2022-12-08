@@ -58,7 +58,7 @@ export class Service extends ServicesBase<
     }
     this.onEvent("setOutputPin", async (pin, state) => {
       for (let cPin of (await self.getPluginConfig()).pins) {
-        if (cPin.pin === cPin.pin) {
+        if (cPin.pin === pin) {
           self.log.debug("Set Output Pin [{pin}]: {state}", { pin, state });
           rpio.write(cPin.pin, state ? rpio.HIGH : rpio.LOW);
           return;
