@@ -57,9 +57,10 @@ export class Service extends ServicesBase<
       rpio.open(pin.pin, pinType, pinPulldownOrState);
     }
     this.onEvent("setOutputPin", async (pin, state) => {
-      for (let pin of (await self.getPluginConfig()).pins) {
-        if (pin.pin === pin.pin) {
-          rpio.write(pin.pin, state ? rpio.HIGH : rpio.LOW);
+      for (let cPin of (await self.getPluginConfig()).pins) {
+        if (cPin.pin === cPin.pin) {
+          self.log.debug("Set Output Pin [{pin}]: {state}", { pin, state });
+          rpio.write(cPin.pin, state ? rpio.HIGH : rpio.LOW);
           return;
         }
       }
