@@ -6,7 +6,7 @@ import {
 import { onEvents } from "../../plugins/service-raspverry-pi-gpio/plugin";
 import { MyPluginConfig } from "../../plugins/service-raspverry-pi-gpio/sec.config";
 
-export class ADBudClient extends ServicesClient<
+export class raspPIGPIO extends ServicesClient<
   onEvents,
   ServiceCallable,
   ServiceCallable,
