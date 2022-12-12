@@ -37,6 +37,7 @@ export interface MyPluginConfig {
   pins: Array<PluginPins>; // PINs
 
   rpioOptions: PluginRPIOOptions; // Options
+  disposeAllLow: boolean; // Dispose Low: Switch all output pins LOW when disconnecting
 }
 
 export class Config extends SecConfig<MyPluginConfig> {
@@ -46,6 +47,7 @@ export class Config extends SecConfig<MyPluginConfig> {
   ): MyPluginConfig {
     return {
       pins: existingConfig.pins !== undefined ? existingConfig.pins : [],
+      disposeAllLow: existingConfig.disposeAllLow !== undefined ? existingConfig.disposeAllLow : true,
       rpioOptions: existingConfig.rpioOptions !== undefined ? existingConfig.rpioOptions : {
         gpiomem: true,
         mapping: PluginRPIOOptionsMapping.physical

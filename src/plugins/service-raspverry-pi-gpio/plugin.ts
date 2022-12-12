@@ -34,10 +34,12 @@ export class Service extends ServicesBase<
     super(pluginName, cwd, pluginCwd, log);
   }
   private knownPins: Array<PluginPins> = [];
+  private disposeAllLow: boolean = true;
   public override dispose(): void {
-    for (let cPin of this.knownPins) {
-      rpio.write(cPin.pin, rpio.LOW);
-    }
+    if (this.disposeAllLow)
+      for (let cPin of this.knownPins) {
+        rpio.write(cPin.pin, rpio.LOW);
+      }
     rpio.exit();
   }
   private async setPinState(pin: number, state: boolean) {
@@ -56,6 +58,7 @@ export class Service extends ServicesBase<
   public override async init(): Promise<void> {
     const self = this;
     this.knownPins = (await self.getPluginConfig()).pins;
+    this.disposeAllLow = (await self.getPluginConfig()).disposeAllLow;
     rpio.init((await self.getPluginConfig()).rpioOptions);
     for (let pin of self.knownPins) {
       await self.log.info(
